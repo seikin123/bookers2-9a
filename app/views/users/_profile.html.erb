@@ -1,0 +1,39 @@
+<table class="table table-user">
+  <h2>User info</h2>
+		<tr><%= attachment_image_tag user, :profile_image, size: "100x100", fallback: "no_image.jpg"%></tr>
+		<tr>
+		  <th>name</th>
+		  <th><%= user.name %></th>
+		</tr>
+		<tr>
+			<th>introduction</th>
+			<th><%= user.introduction %></th>
+		</tr>
+		<tr>
+			<th><%= "follow" %></th>
+			<th><%= link_to "#{user.follower.count}", follow_user_path(user.id) %></th>
+		</tr>
+		<tr>
+			<th><%= "follower" %></th>
+			<th><%= link_to "#{user.followed.count}", follower_user_path(user.id) %></th>
+		</tr>
+</table>
+
+				<% unless current_user == user %>
+					<% if current_user.following?(user) %>
+						<%= link_to 'Unfollow', unfollow_path(user.id), method: :POST, class: 'btn btn-outline-danger' %>
+					<% else %>
+						<%= link_to 'Follow', follow_path(user.id), method: :POST, class: 'btn btn-outline-primary' %>
+					<% end %>
+				<% end %>
+			<% if current_user != user && current_user.following?(user) && user.following?(current_user) %>
+			<%= render 'chats/chat_button' %> <%# チャットボタン  %>
+			<% end %>
+		<div class="row mt-3">
+			<%= link_to " ", edit_user_path(user), class:"btn btn-outline-secondary btn-block fas fa-user-cog" %>
+		</div>
+<%# 編集ボタンについて %>
+<%# <% if user.id == current_user.id %> 
+<%# <% else %>
+<%# <td><%= link_to " ", user_path(current_user), class:"btn btn-outline-secondary btn-block fas fa-user-cog" %>
+<%# <% end %>
